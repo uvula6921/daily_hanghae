@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="Daily Hangae"/>
+    <meta property="og:description" content="항해를 진행하며 하루하루를 기록해보자"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common_css.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS,JS -->
+    {#        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"#}
+    {#          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">#}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+            crossorigin="anonymous"></script>
+    {#    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"#}
+    {#            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"#}
+    {#            crossorigin="anonymous"></script>#}
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"#}
+    {#            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"#}
+    {#            crossorigin="anonymous"></script>#}
+    {#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"#}
+    {#            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"#}
+    {#            crossorigin="anonymous"></script>#}
+
+    <link href="{{ url_for('static', filename='meal_style.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <title>오늘 뭐 먹었어?</title>
+
+    <script>
+
+        function saveContent() {
+
+            let title = $('#title').val();
+            let content = $("#content").val();
+
+
+            let file = $("#file")[0].files[0];
+            let form_data = new FormData();
+            console.log(title, content, file);
+
+            form_data.append("file_give", file);
+            form_data.append("title_give", title);
+            form_data.append("content_give", content);
+
+            $.ajax({
+                type: "POST",
+                url: '/daily_meal',
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
+
+
+    </script>
+</head>
+
+<body>
+{#<!-- Button trigger modal -->#}
+{#<button id="myBtn" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">#}
+{#    글쓰기#}
+{#</button>#}
+{##}
+{#<!-- Modal -->#}
+{#<div id="myModal" class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"#}
+{#     aria-hidden="true">#}
+{#    <div class="modal-dialog" role="document">#}
+{#        <div class="modal-content">#}
+{#            <div class="modal-header">#}
+{#                <h5 class="modal-title" id="exampleModalLabel">#}
+{#                    <input class="form-control" id="title" type="text" placeholder="제목을 입력하세요">#}
+{#                    <div class="custom-file">#}
+{#                        <input type="file" class="custom-file-input" id="file">#}
+{#                        <label class="custom-file-label" for="file">사진 선택하기</label>#}
+{#                    </div>#}
+{#                </h5>#}
+{#                <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
+{#                    <span aria-hidden="true">&times;</span>#}
+{#                </button>#}
+{#            </div>#}
+{#            <div class="modal-body">#}
+{#                <input class="form-control form-content" id="content" type="text">#}
+{#            </div>#}
+{#            <div class="modal-footer">#}
+{#                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>#}
+{#                <button type="button" class="btn btn-primary" onclick="save_content()">저장</button>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+
+<div class="wrap">
+    {#모달#}
+    <!-- Button trigger modal -->
+    <div class="modal-btn-a">
+        <p class="limit-p">게시물은 최근 업데이트된 기준으로 18개만 보여집니다.</p>
+        <button type="button" class="btn btn-primary btn_write" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            글쓰기
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="title" placeholder="제목을 입력하세요">
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="file" class="form-control" placeholder="Recipient's username" id="file">
+                        </div>
+                        {#                    <input class="form-control" id="title" type="text" placeholder="제목을 입력하세요">#}
+                        {#                    <div class="custom-file">#}
+                        {#                        <input type="file" class="custom-file-input" id="file">#}
+                        {#                        <label class="custom-file-label" for="file">사진 선택하기</label>#}
+                        {#                    </div>#}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <textarea class="form-control" id="content" rows="3"
+                          placeholder="내용 입력"></textarea>
+                    {#                <input class="form-control form-content" id="content" type="text">#}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" onclick="saveContent()">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {#카드부분#}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for meal in meal_list %}
+            <div class="col">
+                <div class="card h-100">
+                    <a href="/meal_detail/{{ meal._id }}"> <img src="../static/meal_pics/{{ meal.file }}"
+                                                                class="card-img-top">
+
+                        <div class="card-body">
+                            <div class="title-div">
+                                <h5 class="card-title">{{ meal.title }}</h5>
+                            </div>
+                            <div class="content-div">
+                                <p class="card-text">{{ meal.content }}</p>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    $('div').each(function () {
+        let length = 7;
+
+    })
+</script>
+</body>
+</html>

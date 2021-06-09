@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="Daily Hangae"/>
+    <meta property="og:description" content="항해를 진행하며 하루하루를 기록해보자"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common_css.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+            crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+
+    <style>
+        * {
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .u-d-btn {
+            display: flex;
+            justify-content: flex-end;
+            width: 80%;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .btn-primary {
+            margin-left: 10px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+
+            border: solid 1px gray;
+            border-radius: 10px;
+        }
+
+
+        img {
+            width: 700px;
+            height: 500px;
+            object-fit: img-container;
+        }
+
+        .img_class {
+            padding-bottom: 50px;
+        }
+
+        .u-d-btn {
+
+        }
+
+        .title-form {
+            width: 400px;
+        }
+
+
+    </style>
+
+    <title>오늘 뭐 먹었어?</title>
+    <script>
+        function deleteContent() {
+            $.ajax({
+                type: "POST",
+                url: `/api/delete_content`,
+                data: {id_give: "{{clicked_meal[0]["_id"]}}"},
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.href = '/daily_meal'
+                }
+            });
+        }
+
+        function updateContent() {
+            let title = $("#title").val();
+            let content = $("#content").val();
+
+            $.ajax({
+                type: "POST",
+                url: `/api/update_content`,
+                data: {
+                    id_give: "{{clicked_meal[0]["_id"]}}",
+                    title_give: title,
+                    content_give: content
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload();
+                }
+            });
+
+        }
+
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-end">
+        <div>
+            <h1 id="word" style="display: inline;">{{ clicked_meal[0]["title"] }}</h1>
+        </div>
+    </div>
+    <hr>
+    <div id="definitions">
+        <div style="padding:10px">
+            <div class="img-container">
+                <img class="img_class" src="../static/meal_pics/{{ clicked_meal[0]["file"] }}">
+            </div>
+            <h5>{{ clicked_meal[0]["content"]| replace("\n", "<br/>")|safe }}</h5>
+        </div>
+    </div>
+</div>
+<div class="u-d-btn">
+    {#    <button type="button" class="btn btn-primary">수정</button>#}
+    {#모달#}
+    <!-- Button trigger modal -->
+    <div class="modal-btn-a">
+        <button type="button" class="btn btn-primary btn_write" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            수정
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        <div class="input-group mb-3 title-form">
+                            <input type="text" class="form-control" id="title" placeholder="제목을 입력하세요"
+                                   value="{{ clicked_meal[0]["title"] }}">
+                        </div>
+
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <textarea class="form-control" id="content" rows="3"
+                          placeholder="내용 입력">{{ clicked_meal[0]["content"]| replace("\n", "<br/>")|safe }}</textarea>
+                    {#                <input class="form-control form-content" id="content" type="text">#}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" onclick="updateContent()">저장</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="deleteContent()">삭제</button>
+</div>
+
+
+</body>
+</html>

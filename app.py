@@ -6,7 +6,6 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 
-
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
@@ -94,6 +93,68 @@ def check_dup():
     username_receive = request.form['username_give']
     exists = bool(db.users.find_one({"username": username_receive}))
     return jsonify({'result': 'success', 'exists': exists})
+
+
+# 게시물 리스트 보여줄거
+@app.route('/daily_meal')
+def daily_meal():
+    meal_list = list(db.daily_meal.find({}).sort("_id", -1).limit(18))
+    return render_template("daily_meal.html", meal_list=meal_list)
+
+
+# 게시물 상세페이지 보러가기
+@app.route('/meal_detail/<keyword>')
+def meal_detail(keyword):
+    clicked_meal = list(db.daily_meal.find({"_id": ObjectId(keyword)}))
+
+    return render_template("meal_detail.html", clicked_meal=clicked_meal)
+
+
+# 게시물 등록
+@app.route('/daily_meal', methods=["POST"])
+def save_daily_meal():
+    title_receive = request.form['title_give']
+    content_receive = request.form['content_give']
+
+    # 사진 업로드
+    file = request.files["file_give"]
+    extension = file.filename.split('.')[-1]
+    today = datetime.now()
+    mytime = today.strftime("%Y-%m-%d-%H-%M-%S")
+    filename = f'file-{mytime}'
+    save_to = f'{filename}.{extension}'
+    file.save(f'static/meal_pics/{save_to}')
+
+    doc = {
+        'title': title_receive,
+        'content': content_receive,
+        'file': f'{filename}.{extension}'
+    }
+    db.daily_meal.insert_one(doc)
+
+    return jsonify({'msg': '글쓰기 완료!'})
+
+
+# 게시물 삭제
+@app.route('/api/delete_content', methods=['POST'])
+def delete_content():
+    id_receive = request.form["id_give"]
+    db.daily_meal.delete_one({"_id": ObjectId(id_receive)})
+
+    return jsonify({'result': 'success', 'msg': "게시물 삭제 완료!"})
+
+
+# 게시물 수정
+@app.route('/api/update_content', methods=['POST'])
+def update_content():
+    id_receive = request.form["id_give"]
+    title_receive = request.form["title_give"]
+    content_receive = request.form["content_give"]
+
+    db.daily_meal.update({"_id": ObjectId(id_receive)}, {'$set': {"title": title_receive, "content": content_receive}})
+
+    return jsonify({'result': 'success', 'msg': "게시물 수정 완료!", })
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
