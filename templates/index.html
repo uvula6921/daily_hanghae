@@ -1,10 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Daily Hanghae Login Page</title>
 
-</body>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+        <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+        <meta property="og:title" content="Daily Hangae"/>
+        <meta property="og:description" content="항해를 진행하며 하루하루를 기록해보자"/>
+        <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+
+        <!-- Bulma CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <!-- Font Awesome CSS -->
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="{{ url_for('static', filename='common_css.css') }}" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
+        <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+        <style>
+
+
+        </style>
+        <script>
+
+        </script>
+    </head>
+    <body>
+        <section class="hero is-small is-info">
+            <div class="hero-body">
+                <a href="/">
+                    <p class="title">
+                        <i class="fa fa-compass" aria-hidden="true"></i>
+                        Daily<br>
+                        Hanghae
+                    </p>
+                </a>
+            </div>
+            <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
+            </button>
+        </section>
+    </body>
 </html>

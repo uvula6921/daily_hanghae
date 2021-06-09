@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Cute+Font&family=Poor+Story&display=swap');
+.hero {
+    align-items: center;
+    padding: 10px 0;
+    position: relative;
+}
+.hero.is-small .hero-body {
+    padding: 1.5rem 1.5rem 1.5rem 4.5rem;
+}
+.hero .title {
+    font-family: 'Cute Font', cursive;
+    font-size: 4rem;
+    color: #3298dc !important;
+    line-height: 0.8;
+    position: relative;
+}
+.hero-body {
+    background-color: white;
+    border-radius: 60px;
+}
+.hero .button {
+    position: absolute;
+    right: 40px;
+    top: 35%;
+}
+.fa-sign-out {
+    padding-right: 5px;
+}
+.fa-compass {
+    position: absolute;
+    left: -3.8rem;
+    top: 1rem;
+}
