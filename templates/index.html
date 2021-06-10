@@ -103,6 +103,10 @@
                 }
 
                 init();
+
+                if (location.pathname === "/") {
+                    location.replace("/index")
+                }
             })
         </script>
     </head>

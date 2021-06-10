@@ -34,7 +34,12 @@ def home():
 @app.route('/')
 def login():
     msg = request.args.get("msg")
-    return render_template('login.html', msg=msg)
+    token_receive = request.cookies.get('mytoken')
+    bool_sign_in = bool(token_receive)
+    if bool_sign_in:
+        return home()
+    else:
+        return render_template('login.html', msg=msg)
 
 
 @app.route('/user/<username>')
