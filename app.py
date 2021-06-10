@@ -1,3 +1,4 @@
+from bson import ObjectId
 from pymongo import MongoClient
 import jwt
 import datetime
@@ -11,7 +12,8 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 SECRET_KEY = 'daily_hanghae'
 
-client = MongoClient('15.165.205.11', 27017, username="test", password="test")
+#디비 아이피 본인것으로 바꿔야 되나안되나 실험 가능해요!
+client = MongoClient('52.79.119.219', 27017, username="test", password="test")
 db = client.daily_hanghae
 
 
@@ -113,47 +115,78 @@ def meal_detail(keyword):
 # 게시물 등록
 @app.route('/daily_meal', methods=["POST"])
 def save_daily_meal():
-    title_receive = request.form['title_give']
-    content_receive = request.form['content_give']
+    token_receive = request.cookies.get('mytoken')
 
-    # 사진 업로드
-    file = request.files["file_give"]
-    extension = file.filename.split('.')[-1]
-    today = datetime.now()
-    mytime = today.strftime("%Y-%m-%d-%H-%M-%S")
-    filename = f'file-{mytime}'
-    save_to = f'{filename}.{extension}'
-    file.save(f'static/meal_pics/{save_to}')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
-    doc = {
-        'title': title_receive,
-        'content': content_receive,
-        'file': f'{filename}.{extension}'
-    }
-    db.daily_meal.insert_one(doc)
+        user_info = db.users.find_one({"username": payload["id"]})
+        title_receive = request.form['title_give']
+        content_receive = request.form['content_give']
 
-    return jsonify({'msg': '글쓰기 완료!'})
+        # 사진 업로드
+        file = request.files["file_give"]
+        extension = file.filename.split('.')[-1]
+        today = datetime.now()
+        mytime = today.strftime("%Y-%m-%d-%H-%M-%S")
+        filename = f'file-{mytime}'
+        save_to = f'{filename}.{extension}'
+        file.save(f'static/meal_pics/{save_to}')
+
+        doc = {
+            "username": user_info["username"],
+            "user_name": user_info["user_name"],
+            'title': title_receive,
+            'content': content_receive,
+            'file': f'{filename}.{extension}'
+        }
+        db.daily_meal.insert_one(doc)
+        return jsonify({"result": "success", 'msg': '글쓰기 완료!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("daily_meal"))
 
 
 # 게시물 삭제
 @app.route('/api/delete_content', methods=['POST'])
 def delete_content():
-    id_receive = request.form["id_give"]
-    db.daily_meal.delete_one({"_id": ObjectId(id_receive)})
+    token_receive = request.cookies.get('mytoken')
 
-    return jsonify({'result': 'success', 'msg': "게시물 삭제 완료!"})
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        id_receive = request.form["id_give"]
+        # user_info = db.daily_meal.find_one({"username" : payload["id"]})
+        data_info = db.daily_meal.find_one({"_id": ObjectId(id_receive)})
+
+        if data_info["username"] == payload["id"]:
+            db.daily_meal.delete_one({"_id": ObjectId(id_receive)})
+            return jsonify({'result': 'success', 'msg': "게시물 삭제 완료!"})
+        else:
+            return jsonify({'result': 'success', 'msg': "자신이 쓴 게시물만 삭제 가능합니다."})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("daily_meal"))
 
 
 # 게시물 수정
 @app.route('/api/update_content', methods=['POST'])
 def update_content():
-    id_receive = request.form["id_give"]
-    title_receive = request.form["title_give"]
-    content_receive = request.form["content_give"]
+    token_receive = request.cookies.get('mytoken')
+    try:
+        id_receive = request.form["id_give"]
+        title_receive = request.form["title_give"]
+        content_receive = request.form["content_give"]
 
-    db.daily_meal.update({"_id": ObjectId(id_receive)}, {'$set': {"title": title_receive, "content": content_receive}})
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        data_info = db.daily_meal.find_one({"_id": ObjectId(id_receive)})
 
-    return jsonify({'result': 'success', 'msg': "게시물 수정 완료!", })
+        if data_info["username"] == payload["id"]:
+            db.daily_meal.update({"_id": ObjectId(id_receive)},
+                                 {'$set': {"title": title_receive, "content": content_receive}})
+            return jsonify({'result': 'success', 'msg': "게시물 수정 완료!"})
+        else:
+            return jsonify({'result': 'success', 'msg': "자신이 쓴 게시물만 수정 가능합니다."})
+
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("daily_meal"))
 
 
 if __name__ == '__main__':

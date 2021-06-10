@@ -4,34 +4,26 @@
 .modal-title {
     width: 500px;
 }
-
-
 .form-content {
     height: 500px;
 }
-
 .card-img-top {
     height: 200px;
 
 }
-
 .modal-btn-a {
     padding-bottom: 30px;
     padding-top: 50px;
     display: flex;
     justify-content: space-between;
 }
-
 .limit-p {
     font-size: 20px;
 }
-
-
 .wrap {
     width: 900px;
     margin: auto;
 }
-
 A:link {
     text-decoration: none;
     color: black;
@@ -40,20 +32,16 @@ A:visited {
     text-decoration: none;
     color: black;
 }
-
 .card {
     background-color: #ebf1f5;
 }
-
 .content-div {
     display: block;
     width: 250px;
     height: 100px;
     text-overflow: ellipsis;
     overflow: hidden;
-
 }
-
 .title-div {
     display: block;
     width: 240px;
@@ -61,11 +49,5 @@ A:visited {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-
 }
 
-/*카드관련*/
-/*.h-100{*/
-/*    width : 300px;*/
-/*   */
-/*}*/

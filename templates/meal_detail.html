@@ -34,19 +34,15 @@
         * {
             font-family: 'Do Hyeon', sans-serif;
         }
-
         .u-d-btn {
             display: flex;
             justify-content: flex-end;
-            width: 80%;
-            max-width: 800px;
-            margin: 30px auto;
-        }
+            margin-right : 15%;
 
+        }
         .btn-primary {
             margin-left: 10px;
         }
-
         .container {
             width: 80%;
             max-width: 800px;
@@ -57,31 +53,21 @@
             border: solid 1px gray;
             border-radius: 10px;
         }
-
-
         img {
             width: 700px;
             height: 500px;
-            object-fit: img-container;
         }
-
         .img_class {
             padding-bottom: 50px;
         }
-
-        .u-d-btn {
-
-        }
-
         .title-form {
             width: 400px;
         }
-
-
     </style>
 
     <title>오늘 뭐 먹었어?</title>
     <script>
+        {#글 삭제 함수#}
         function deleteContent() {
             $.ajax({
                 type: "POST",
@@ -93,7 +79,7 @@
                 }
             });
         }
-
+        {#글 수정 함수#}
         function updateContent() {
             let title = $("#title").val();
             let content = $("#content").val();
@@ -120,8 +106,10 @@
 
 <div class="container">
     <div class="d-flex justify-content-between align-items-end">
-        <div>
+        <div class="detail-title-div">
             <h1 id="word" style="display: inline;">{{ clicked_meal[0]["title"] }}</h1>
+            <h5>작성자:🙉{{ clicked_meal[0]["user_name"] }} </h5>
+
         </div>
     </div>
     <hr>
@@ -172,7 +160,5 @@
     </div>
     <button type="button" class="btn btn-primary" onclick="deleteContent()">삭제</button>
 </div>
-
-
 </body>
 </html>
