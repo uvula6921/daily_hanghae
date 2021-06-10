@@ -20,6 +20,8 @@
     <link href="{{ url_for('static', filename='common_css.css') }}" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+And+White+Picture&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS,JS -->
     {#        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"#}
@@ -29,6 +31,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
             crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='common_js.js') }}"></script>
     {#    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"#}
     {#            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"#}
     {#            crossorigin="anonymous"></script>#}
@@ -111,7 +114,47 @@
 {#        </div>#}
 {#    </div>#}
 {#</div>#}
-
+<section class="hero is-small is-info">
+    <div class="hero-body">
+        <a href="/index">
+            <p class="title">
+                <i class="fa fa-compass" aria-hidden="true"></i>
+                Daily<br>
+                Hanghae
+            </p>
+        </a>
+    </div>
+    {% if bool_sign_in %}
+        <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd"
+                onclick="$('.modal').addClass('is-active'); sign_out();">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
+        </button>
+    {% endif %}
+</section>
+<section>
+    <div class="tabs is-centered is-boxed is-medium">
+        <ul>
+            <li>
+                <a>
+                    <span class="icon is-small"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
+                    <span>Daily meal</span>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <span class="icon is-small"><i class="fa fa-book" aria-hidden="true"></i></span>
+                    <span>Diary</span>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <span class="icon is-small"><i class="fa fa-user-secret" aria-hidden="true"></i></span>
+                    <span>Blind</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
 <div class="wrap">
     {#모달#}
     <!-- Button trigger modal -->

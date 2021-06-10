@@ -13,24 +13,25 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 SECRET_KEY = 'daily_hanghae'
 
 #디비 아이피 본인것으로 바꿔야 되나안되나 실험 가능해요!
-client = MongoClient('52.79.119.219', 27017, username="test", password="test")
+client = MongoClient('52.79.249.230', 27017, username="test", password="test")
 db = client.daily_hanghae
 
 
-@app.route('/')
+@app.route('/index')
 def home():
     token_receive = request.cookies.get('mytoken')
+    bool_sign_in = bool(token_receive)
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-
-        return render_template('index.html')
+        user_info = db.users.find_one({"username": payload["id"]}, {"_id": False})
+        return render_template('index.html', user_info=user_info, bool_sign_in=bool_sign_in)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+        return redirect(url_for("login", msg="로그인을 먼저 진행해주세요."))
 
 
-@app.route('/login')
+@app.route('/')
 def login():
     msg = request.args.get("msg")
     return render_template('login.html', msg=msg)

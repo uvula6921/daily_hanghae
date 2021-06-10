@@ -20,23 +20,96 @@
         <link href="{{ url_for('static', filename='common_css.css') }}" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Black+And+White+Picture&display=swap" rel="stylesheet">
 
         <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+        <script src="{{ url_for('static', filename='common_js.js') }}"></script>
 
         <style>
+            .floating {
+                -webkit-animation-name: Floatingx;
+                -webkit-animation-duration: 3s;
+                -webkit-animation-iteration-count: infinite;
+                -webkit-animation-timing-function: ease-in-out;
+                -moz-animation-name: Floating;
+                -moz-animation-duration: 3s;
+                -moz-animation-iteration-count: infinite;
+                -moz-animation-timing-function: ease-in-out;
+                text-align: center;
+            }
+            .floating > img {
+                width: 300px;
+            }
 
+            @-webkit-keyframes Floatingx {
+                from {
+                    -webkit-transform: translate(0, 0px);
+                }
+                65% {
+                    -webkit-transform: translate(0, 30px);
+                }
+                to {
+                    -webkit-transform: translate(0, -0px);
+                }
+            }
 
+            @-moz-keyframes Floating {
+                from {
+                    -moz-transform: translate(0, 0px);
+                }
+                65% {
+                    -moz-transform: translate(0, 15px);
+                }
+                to {
+                    -moz-transform: translate(0, -0px);
+                }
+            }
+            .day_count {
+                font-family: 'Do Hyeon', sans-serif;
+                text-align: center;
+                color: #333;
+                font-size: 1rem;
+            }
+            .day_count .title {
+                margin-top: 60px;
+            }
+            .day_count .subtitle {
+                font-size: 2.5rem;
+                color: #bd2424;
+                font-family: 'Black And White Picture', sans-serif;
+            }
         </style>
         <script>
+            $(document).ready(function () {
+                const clock = $('.day_count .subtitle')
+                function getTime() {
+                    const setDate = new Date("2021-06-07T09:00:00+0900");
+                    const now = new Date();
+                    const distance = now.getTime() - setDate.getTime();
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    clock.text(`${days < 10 ? `0${days}` : days}일 ${hours < 10 ? `0${hours}` : hours}시간
+                                  ${minutes < 10 ? `0${minutes}` : minutes}분
+                                  ${seconds < 10 ? `0${seconds}` : seconds}초`)
+                }
 
+                function init() {
+                    setInterval(getTime, 1000);
+                }
+
+                init();
+            })
         </script>
     </head>
     <body>
         <section class="hero is-small is-info">
             <div class="hero-body">
-                <a href="/">
+                <a href="/index">
                     <p class="title">
                         <i class="fa fa-compass" aria-hidden="true"></i>
                         Daily<br>
@@ -44,9 +117,53 @@
                     </p>
                 </a>
             </div>
-            <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd">
+            {% if bool_sign_in %}
+            <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd" onclick="$('.modal').addClass('is-active'); sign_out();">
                 <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
             </button>
+            {% endif %}
         </section>
+        <section>
+            <div class="tabs is-centered is-boxed is-medium">
+                <ul>
+                    <li>
+                        <a>
+                            <span class="icon is-small"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
+                            <span>Daily meal</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <span class="icon is-small"><i class="fa fa-book" aria-hidden="true"></i></span>
+                            <span>Diary</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <span class="icon is-small"><i class="fa fa-user-secret" aria-hidden="true"></i></span>
+                            <span>Blind</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section class="section day_count">
+            <div class="floating">
+                <img src="../static/little_boat.jpeg">
+            </div>
+            <h1 class="title">{{ user_info.user_name }}님이 출항한지...</h1>
+            <h2 class="subtitle"></h2>
+        </section>
+        <div class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <section class="modal-card-body">
+                    로그아웃이 완료되었습니다.
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button" onclick="window.location.replace('/');">Check</button>
+                </footer>
+            </div>
+        </div>
     </body>
 </html>

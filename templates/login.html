@@ -200,6 +200,9 @@
         <script>
             $(document).ready(function(){
                 FocusOut()
+                {% if msg %}
+                    alert("{{ msg }}");
+                {% endif %}
             })
 
             function boxSlideInOut() {
@@ -378,7 +381,7 @@
                     success: function (response) {
                         if (response['result'] == 'success') {
                             $.cookie('mytoken', response['token'], {path: '/'});
-                            window.location.replace("/")
+                            window.location.replace("/index")
                         } else {
                             alert(response['msg'])
                         }
@@ -397,7 +400,7 @@
     <body>
         <section class="hero is-small is-info">
             <div class="hero-body">
-                <a href="/">
+                <a href="#">
                     <p class="title">
                         <i class="fa fa-compass" aria-hidden="true"></i>
                         Daily<br>
@@ -405,9 +408,6 @@
                     </p>
                 </a>
             </div>
-            <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd">
-                <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
-            </button>
         </section>
         <section class="section login_bg section_height">
             <div class="container">

@@ -31,3 +31,36 @@
     left: -3.8rem;
     top: 1rem;
 }
+.tabs li {
+    flex-basis: 15rem;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.5rem;
+}
+.modal-card-foot .button {
+    background-color: #3298dc;
+}
+.modal-card-foot, .modal-card-head {
+    justify-content: center;
+}
+.modal-card-foot .button {
+    color: white;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.3rem;
+}
+.modal-card-body {
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 1.3rem;
+    color: #333;
+    text-align: center;
+}
+@media screen and (min-width: 769px) {
+    .modal-card, .modal-content {
+        width: 440px;
+    }
+}
+.hero-body p.title {
+    margin-bottom: 0;
+}
+.tabs ul {
+    padding-left: 0;
+}
