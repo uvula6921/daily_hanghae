@@ -194,6 +194,96 @@ def update_content():
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("daily_meal"))
 
+# 다이어리 리스트 페이지
+@app.route('/diary_list')
+def diary_list():
+    diary_list = list(db.diary.find({}).sort("_id", -1))
+    return render_template("diary_list.html", diary_list=diary_list)
+
+# 다이어리 상세 페이지
+@app.route('/diary/<keyword>')
+def diary_detail(keyword):
+    clicked_diary = list(db.diary.find({"_id": ObjectId(keyword)}))
+
+    return render_template("diary.html", clicked_diary=clicked_diary)
+
+# 다이어리 작성페이지
+@app.route('/diary_write')
+def diary_write():
+    return render_template("diary_write.html")
+
+# 다이어리 작성
+@app.route('/write_diary', methods=['POST'])
+def write_diary():
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+        user_info = db.users.find_one({"username": payload["id"]})
+        title_receive = request.form['title_give']
+        content_receive = request.form['content_give']
+
+        file = request.files["file_give"]
+        extension = file.filename.split('.')[-1]
+        today = datetime.now()
+        mytime = today.strftime("%Y-%m-%d-%H-%M-%S")
+        filename = f'file-{mytime}'
+        save_to = f'{filename}.{extension}'
+        file.save(f'static/diary_pics/{save_to}')
+
+        doc = {
+            "username": user_info["username"],
+            "user_name": user_info["user_name"],
+            'title': title_receive,
+            'content': content_receive,
+            'file': f'{filename}.{extension}'
+        }
+        db.diary.insert_one(doc)
+        return jsonify({"result": "success", 'msg': '게시물 저장이 완료되었습니다!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("diary_list"))
+
+# 다이어리 수정
+@app.route('/eidt_diary', methods=['POST'])
+def edit_diary():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        id_receive = request.form["id_give"]
+        title_receive = request.form["title_give"]
+        content_receive = request.form["content_give"]
+
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        data_info = db.diary.find_one({"_id": ObjectId(id_receive)})
+
+        if data_info["username"] == payload["id"]:
+            db.diary.update({"_id": ObjectId(id_receive)},
+                            {'$set': {"title": title_receive, "content": content_receive}})
+            return jsonify({'result': 'success', 'msg': "게시물 수정이 완료 되었습니다!"})
+        else:
+            return jsonify({'result': 'success', 'msg': "게시물 수정 권한이 없습니다!"})
+
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("diary_list"))
+
+# 다이어리 삭제
+@app.route('/delete_diary', methods=['POST'])
+def delete_diary():
+    token_receive = request.cookies.get('mytoken')
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        id_receive = request.form["id_give"]
+        data_info = db.diary.find_one({"_id": ObjectId(id_receive)})
+
+        if data_info["username"] == payload["id"]:
+            db.diary.delete_one({"_id": ObjectId(id_receive)})
+            return jsonify({'result': 'success', 'msg': "게시물 삭제가 완료 되었습니다!"})
+        else:
+            return jsonify({'result': 'success', 'msg': "게시물 삭제 권한이 없습니다!"})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("diary_list"))
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

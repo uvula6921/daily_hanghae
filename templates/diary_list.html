@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Webpage Title -->
+    <title>Daily 항해</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="Daily Hangae"/>
+    <meta property="og:description" content="항해를 진행하며 하루하루를 기록해보자"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common_css.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+And+White+Picture&display=swap" rel="stylesheet">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="{{ url_for('static', filename='common_js.js') }}"></script>
+
+    <!-- 구글폰트 -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="http://example.com/myicon.png">
+
+    </script>
+
+    <style type="text/css">
+
+        * {
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        .card-img-top {
+            width: 100%;
+            max-height: 400px;
+            min-height: 400px;
+        }
+
+        .card-title {
+            width: 260px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-text {
+            width: 260px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .card {
+            width: 350px;
+            max-width: 400px;
+            max-height: 600px;
+            min-height: 600px;
+            margin: 50px 50px 50px 50px;
+            float: left;
+            display: block;
+            position: relative;
+            left: 40px;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<!-- header -->
+</script>
+</head>
+<body>
+<section class="hero is-small is-info">
+    <div class="hero-body">
+        <a href="/index">
+            <p class="title">
+                <i class="fa fa-compass" aria-hidden="true"></i>
+                Daily<br>
+                Hanghae
+            </p>
+        </a>
+    </div>
+    {% if bool_sign_in %}
+        <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd"
+                onclick="$('.modal').addClass('is-active'); sign_out();">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
+        </button>
+    {% endif %}
+</section>
+<section>
+    <div class="tabs is-centered is-boxed is-medium">
+        <ul>
+            <li>
+                <a href="/daily_meal" style="position: relative; left: 12px;">
+                    <span class="icon is-small"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
+                    <span>Daily meal</span>
+                </a>
+            </li>
+            <li class="is-active">
+                <a href="/diary_list" style="position: relative; left: 12px;">
+                    <span class="icon is-small"><i class="fa fa-book" aria-hidden="true"></i></span>
+                    <span>Diary</span>
+                </a>
+            </li>
+            <li>
+                <a href="/blind_list" style="position: relative; left: 70px;">
+                    <span class="icon is-small"><i class="fa fa-user-secret" aria-hidden="true"></i></span>
+                    <span>Blind</span>
+                    <button type="button" class="btn btn-primary" style="position: relative; left: 290px;"
+                            onclick="window.location.href='/diary_write'">다이어리 작성하기
+                    </button>
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- content -->
+{% for diary in diary_list %}
+    <div class="card">
+        <a class="a-tag" href='/diary/{{ diary._id }}'></a>
+        <img src="../static/diary_pics/{{ diary.file }}" class="card-img-top" alt="Card image cap" onclick="window.location.href='/diary/{{ diary._id }}'" >
+        <div class="card-body">
+            <h5 class="card-title">{{ diary.title }}</h5>
+            <p class="card-text">{{ diary.content }}</p>
+        </div>
+    </div>
+{% endfor %}
+
+<!— footer —>
+
+</body>
+</html>
