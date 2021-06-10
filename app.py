@@ -13,7 +13,7 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 SECRET_KEY = 'daily_hanghae'
 
 #디비 아이피 본인것으로 바꿔야 되나안되나 실험 가능해요!
-client = MongoClient('52.79.249.230', 27017, username="test", password="test")
+client = MongoClient('52.79.119.219', 27017, username="test", password="test")
 db = client.daily_hanghae
 
 
@@ -107,15 +107,19 @@ def check_dup():
 @app.route('/daily_meal')
 def daily_meal():
     meal_list = list(db.daily_meal.find({}).sort("_id", -1).limit(18))
-    return render_template("daily_meal.html", meal_list=meal_list)
+    token_receive = request.cookies.get('mytoken')
+    bool_sign_in = bool(token_receive)
+    return render_template("daily_meal.html", meal_list=meal_list, bool_sign_in=bool_sign_in)
 
 
 # 게시물 상세페이지 보러가기
 @app.route('/meal_detail/<keyword>')
 def meal_detail(keyword):
     clicked_meal = list(db.daily_meal.find({"_id": ObjectId(keyword)}))
+    token_receive = request.cookies.get('mytoken')
+    bool_sign_in = bool(token_receive)
 
-    return render_template("meal_detail.html", clicked_meal=clicked_meal)
+    return render_template("meal_detail.html", clicked_meal=clicked_meal, bool_sign_in=bool_sign_in)
 
 
 # 게시물 등록
@@ -283,6 +287,40 @@ def delete_diary():
             return jsonify({'result': 'success', 'msg': "게시물 삭제 권한이 없습니다!"})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("diary_list"))
+
+@app.route('/blind_list')
+def blind_list():
+    return render_template('blind_list.html')
+
+@app.route('/blind_write')
+def blind_write():
+    return render_template('blind_write.html')
+
+@app.route('/blind_writing', methods=['POST'])
+def save_blind():
+    blind_title_receive = request.form['blind_title_give']
+    blind_content_receive = request.form['blind_content_give']
+    blind_date_receive = request.form['blind_date_give']
+    doc = {
+        'blind_title': blind_title_receive,
+        'blind_content': blind_content_receive,
+        'blind_date': blind_date_receive
+    }
+    db.blind.insert_one(doc)
+    return jsonify({'msg': '저장완료!'})
+
+@app.route('/blind_listing', methods=['GET'])
+def show_blind():
+    blinds = list(db.blind.find({}).sort("blind_date", -1).limit(20))
+    for blind in blinds:
+        blind["_id"] = str(blind["_id"])
+    return jsonify({'all_blind': blinds})
+
+@app.route('/blind_deleting', methods=['POST'])
+def blind_delete():
+    blind_id_receive = request.form['blind_id_give']
+    db.blind.delete_one({"_id": ObjectId(blind_id_receive)})
+    return jsonify({'result': 'success', 'msg': '블라인드 지워짐'})
 
 
 if __name__ == '__main__':

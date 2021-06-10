@@ -29,6 +29,7 @@
             integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
             crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='common_js.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
 
@@ -37,15 +38,18 @@
         * {
             font-family: 'Do Hyeon', sans-serif;
         }
+
         .u-d-btn {
             display: flex;
             justify-content: flex-end;
-            margin-right : 15%;
-
+            margin-right: 15%;
+            margin-bottom: 50px;
         }
+
         .btn-primary {
             margin-left: 10px;
         }
+
         .container {
             width: 80%;
             max-width: 800px;
@@ -55,22 +59,33 @@
 
             border: solid 1px gray;
             border-radius: 10px;
+            word-wrap: break-word;
         }
+
         img {
             width: 700px;
             height: 500px;
         }
+
         .img_class {
             padding-bottom: 50px;
         }
+
         .title-form {
             width: 400px;
         }
+
+        .update-btn {
+            margin-left: 30px;
+        }
+
+
     </style>
 
     <title>오늘 뭐 먹었어?</title>
     <script>
         {#글 삭제 함수#}
+
         function deleteContent() {
             $.ajax({
                 type: "POST",
@@ -82,7 +97,9 @@
                 }
             });
         }
+
         {#글 수정 함수#}
+
         function updateContent() {
             let title = $("#title").val();
             let content = $("#content").val();
@@ -107,15 +124,15 @@
 </head>
 <body>
 <section class="hero is-small is-info">
-            <div class="hero-body">
-                <a href="/index">
-                    <p class="title">
-                        <i class="fa fa-compass" aria-hidden="true"></i>
-                        Daily<br>
-                        Hanghae
-                    </p>
-                </a>
-            </div>
+    <div class="hero-body">
+        <a href="/index">
+            <p class="title">
+                <i class="fa fa-compass" aria-hidden="true"></i>
+                Daily<br>
+                Hanghae
+            </p>
+        </a>
+    </div>
     {% if bool_sign_in %}
         <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd"
                 onclick="$('.modal').addClass('is-active'); sign_out();">
@@ -123,13 +140,36 @@
         </button>
     {% endif %}
 </section>
+<section>
+    <div class="tabs is-centered is-boxed is-medium">
+        <ul>
+            <li class="is-active">
+                <a href="/daily_meal">
+                    <span class="icon is-small"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
+                    <span>Daily meal</span>
+                </a>
+            </li>
+            <li>
+                <a href="/diary_list">
+                    <span class="icon is-small"><i class="fa fa-book" aria-hidden="true"></i></span>
+                    <span>Diary</span>
+                </a>
+            </li>
+            <li>
+                <a href="/blind_list">
+                    <span class="icon is-small"><i class="fa fa-user-secret" aria-hidden="true"></i></span>
+                    <span>Blind</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
 
 <div class="container">
     <div class="d-flex justify-content-between align-items-end">
         <div class="detail-title-div">
-            <h1 id="word" style="display: inline;">{{ clicked_meal[0]["title"] }}</h1>
+            <h2 id="word">{{ clicked_meal[0]["title"] }}</h2>
             <h5>작성자:🙉{{ clicked_meal[0]["user_name"] }} </h5>
-
         </div>
     </div>
     <hr>
@@ -142,12 +182,21 @@
         </div>
     </div>
 </div>
+
 <div class="u-d-btn">
     {#    <button type="button" class="btn btn-primary">수정</button>#}
     {#모달#}
     <!-- Button trigger modal -->
-    <div class="modal-btn-a">
-        <button type="button" class="btn btn-primary btn_write" data-bs-toggle="modal" data-bs-target="#exampleModal">
+
+    <button type="button" class="btn btn-primary btn_list" onclick="window.location.href='daily_meal.html'">
+        목록으로
+    </button>
+
+
+    <div class="modal-btn-a update-btn">
+
+        <button type="button" class="btn btn-primary btn_write" data-bs-toggle="modal"
+                data-bs-target="#exampleModal">
             수정
         </button>
     </div>
@@ -179,6 +228,20 @@
         </div>
     </div>
     <button type="button" class="btn btn-primary" onclick="deleteContent()">삭제</button>
+
+    <div class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <section class="modal-card-body">
+                로그아웃이 완료되었습니다.
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button" onclick="window.location.replace('/');">Check</button>
+            </footer>
+        </div>
+    </div>
+
 </div>
+
 </body>
 </html>

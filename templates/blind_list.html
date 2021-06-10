@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="Daily Hangae"/>
+    <meta property="og:description" content="항해를 진행하며 하루하루를 기록해보자"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common_css.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+And+White+Picture&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS,JS -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='common_js.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link href="{{ url_for('static', filename='meal_style.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <title>Blind List</title>
+    <script>
+        $(document).ready(function () {
+            listing()
+        })
+
+        function time2str(date) {
+            let today = new Date()
+            let time = (today - date) / 1000 / 60  // 분
+            if (time < 60) {
+                return parseInt(time) + "분 전"
+            }
+            time = time / 60  // 시간
+            if (time < 24) {
+                return parseInt(time) + "시간 전"
+            }
+            time = time / 24
+            if (time < 7) {
+                return parseInt(time) + "일 전"
+            }
+            return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`
+        }
+
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: "/blind_listing",
+                data: {},
+                success: function (response) {
+                    let blinds = response['all_blind']
+                    for (let i = 0; i < blinds.length; i++) {
+                        let blind_title = blinds[i]['blind_title']
+                        let blind_content = blinds[i]['blind_content']
+                        let blind_id = blinds[i]["_id"]
+                        let blind_date = new Date(blinds[i]["blind_date"])
+                        let time_before = time2str(blind_date)
+                        let temp_html = `<div class="card" id="${blind_id}">
+                                            <div class="card-header" id="headingOne">
+                                              <h5 class="mb-0">
+                                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
+                                                   ♥  ${blind_title}           <div class="timebox">${time_before}</div> <button onclick='blind_delete("${blind_id}")' class="delete is-large"></button>
+                                                </button>
+                                              </h5>
+                                            </div>
+                                            <div id="collapse${i}" class="collapse hide" aria-labelledby="heading${i}" data-parent="#accordion">
+                                              <div class="card-body">
+                                                ${blind_content}
+                                              </div>
+                                            </div>
+                                          </div>`
+                        $('#accordion').append(temp_html)
+
+                    }
+                }
+            })
+        }
+
+        function blind_delete(i) {
+            $.ajax({
+                type: "POST",
+                url: `/blind_deleting`,
+                data: {
+                    blind_id_give: i
+                },
+                success: function (response) {
+                    listing();
+                    location.reload()
+                }
+            });
+        }
+    </script>
+    <style>
+        .blind_desc {
+            width: 800px;
+            margin: auto;
+        }
+
+        .card-body {
+            background-color: #d4f7ff
+        }
+
+        .card {
+            background-color: #feffb7
+        }
+
+        .timebox {
+            padding-left: 600px;
+            color: chocolate;
+        }
+
+
+    </style>
+</head>
+<body>
+<section class="hero is-small is-info">
+    <div class="hero-body">
+        <a href="/index">
+            <p class="title">
+                <i class="fa fa-compass" aria-hidden="true"></i>
+                Daily<br>
+                Hanghae
+            </p>
+        </a>
+    </div>
+    {% if bool_sign_in %}
+    <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd"
+            onclick="$('.modal').addClass('is-active'); sign_out();">
+        <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
+    </button>
+    {% endif %}
+</section>
+<section>
+    <div class="tabs is-centered is-boxed is-medium">
+        <ul>
+            <li>
+                <a href="/daily_meal">
+                    <span class="icon is-small"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
+                    <span>Daily meal</span>
+                </a>
+            </li>
+            <li>
+                <a href="/diary_list">
+                    <span class="icon is-small"><i class="fa fa-book" aria-hidden="true"></i></span>
+                    <span>Diary</span>
+                </a>
+            </li>
+            <li class="is-active">
+                <a href="/blind_list">
+                    <span class="icon is-small"><i class="fa fa-user-secret" aria-hidden="true"></i></span>
+                    <span>Blind</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <button onclick="location.href='/blind_write'" type="button" class="float-right btn_write_go btn btn-primary btn-lg">글쓰러가기</button>
+</section>
+<div id="accordion" class="blind_desc">
+</div>
+</body>
+</html>

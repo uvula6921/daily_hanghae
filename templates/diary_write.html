@@ -146,82 +146,84 @@
             border-style: hidden;
         }
 
+        .wrap {
+            width: 1350px;
+            margin: auto;
+        }
+
     </style>
 </head>
 
+
 <body>
-<!-- header -->
-</script>
-    </head>
-    <body>
-        <section class="hero is-small is-info">
-            <div class="hero-body">
-                <a href="/index">
-                    <p class="title">
-                        <i class="fa fa-compass" aria-hidden="true"></i>
-                        Daily<br>
-                        Hanghae
-                    </p>
+<section class="hero is-small is-info">
+    <div class="hero-body">
+        <a href="/index">
+            <p class="title">
+                <i class="fa fa-compass" aria-hidden="true"></i>
+                Daily<br>
+                Hanghae
+            </p>
+        </a>
+    </div>
+    {% if bool_sign_in %}
+        <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd"
+                onclick="$('.modal').addClass('is-active'); sign_out();">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
+        </button>
+    {% endif %}
+</section>
+<section>
+    <div class="tabs is-centered is-boxed is-medium">
+        <ul>
+            <li>
+                <a href="/daily_meal">
+                    <span class="icon is-small"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
+                    <span>Daily meal</span>
                 </a>
-            </div>
-            {% if bool_sign_in %}
-            <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd" onclick="$('.modal').addClass('is-active'); sign_out();">
-                <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
-            </button>
-            {% endif %}
-        </section>
-        <section>
-            <div class="tabs is-centered is-boxed is-medium">
-                <ul>
-                    <li>
-                        <a href="/daily_meal">
-                            <span class="icon is-small"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
-                            <span>Daily meal</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/diary_list">
-                            <span class="icon is-small"><i class="fa fa-book" aria-hidden="true"></i></span>
-                            <span>Diary</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            <span class="icon is-small"><i class="fa fa-user-secret" aria-hidden="true"></i></span>
-                            <span>Blind</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </section>
+            </li>
+            <li>
+                <a href="/diary_list">
+                    <span class="icon is-small"><i class="fa fa-book" aria-hidden="true"></i></span>
+                    <span>Diary</span>
+                </a>
+            </li>
+            <li>
+                <a href="/blind_list">
+                    <span class="icon is-small"><i class="fa fa-user-secret" aria-hidden="true"></i></span>
+                    <span>Blind</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
 <!-- content -->
-<div class="view-img" id="imagePreview">
-    <img id="upload-img" class="upload-img"/>
-</div>
-<div class="content">
-    <p>사진 업로드</p>
-    <div class="custom-file">
-        <input type="file" class="custom-file-input" id="file" accept="image/gif, image/jpeg, image/png">
-        <label class="custom-file-label" for="customFile" style="color: rgba(42,42,42,0.71);">업로드할 사진을 선택하세요.</label>
+<div class="wrap">
+    <div class="view-img" id="imagePreview">
+        <img id="upload-img" class="upload-img"/>
     </div>
-    <div class="form-group">
-        <label for="formGroupExampleInput">제목</label>
-        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="제목을 입력하세요.">
+    <div class="content">
+        <p>사진 업로드</p>
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="file" accept="image/gif, image/jpeg, image/png">
+            <label class="custom-file-label" for="customFile" style="color: rgba(42,42,42,0.71);">업로드할 사진을
+                선택하세요.</label>
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput">제목</label>
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="제목을 입력하세요.">
+        </div>
+        <div class="form-group">
+            <label for="formGroupExampleInput2">내용</label>
+            <textarea class="form-control" id="formGroupExampleInput2" cols="50" rows="5"
+                      placeholder="내용을 입력하세요."></textarea>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary" onclick="makeDiary()"> 게시글 작성</button>
+            <button type="button" class="btn btn-secondary" onclick="cancel()"> 취소</button>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="formGroupExampleInput2">내용</label>
-        <textarea class="form-control" id="formGroupExampleInput2" cols="50" rows="5"
-                  placeholder="내용을 입력하세요."></textarea>
-    </div>
-    <div>
-        <button type="button" class="btn btn-primary" onclick="makeDiary()"> 게시글 작성</button>
-        <button type="button" class="btn btn-secondary" onclick="cancel()"> 취소</button>
-    </div>
-</div>
-<!— footer —>
-<div class="jumbotron text-center mt-5 mb-0"><h3 class="text-secondary">Daily 항해</h3>
-    <p>This Homepage is powered by <span class="text-primary">Team 15</span> / Designed by <span
-            class="text-primary">Team 15</span></p>
+
 </div>
 </body>
 </html>

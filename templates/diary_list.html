@@ -80,15 +80,19 @@
             position: relative;
             left: 40px;
         }
+        .wrap {
+            width: 1350px;
+            margin: auto;
+        }
 
 
     </style>
 </head>
 
-<body>
+
 <!-- header -->
-</script>
-</head>
+
+
 <body>
 <section class="hero is-small is-info">
     <div class="hero-body">
@@ -123,7 +127,7 @@
                 </a>
             </li>
             <li>
-                <a href="/blind_list" style="position: relative; left: 70px;">
+                <a href="/diary_write" style="position: relative; left: 70px;">
                     <span class="icon is-small"><i class="fa fa-user-secret" aria-hidden="true"></i></span>
                     <span>Blind</span>
                     <button type="button" class="btn btn-primary" style="position: relative; left: 290px;"
@@ -136,17 +140,19 @@
 </section>
 
 <!-- content -->
-{% for diary in diary_list %}
-    <div class="card">
-        <a class="a-tag" href='/diary/{{ diary._id }}'></a>
-        <img src="../static/diary_pics/{{ diary.file }}" class="card-img-top" alt="Card image cap" onclick="window.location.href='/diary/{{ diary._id }}'" >
-        <div class="card-body">
-            <h5 class="card-title">{{ diary.title }}</h5>
-            <p class="card-text">{{ diary.content }}</p>
+<div class="wrap">
+    {% for diary in diary_list %}
+        <div class="card">
+            <a class="a-tag" href='/diary/{{ diary._id }}'></a>
+            <img src="../static/diary_pics/{{ diary.file }}" class="card-img-top" alt="Card image cap"
+                 onclick="window.location.href='/diary/{{ diary._id }}'">
+            <div class="card-body">
+                <h5 class="card-title">{{ diary.title }}</h5>
+                <p class="card-text">{{ diary.content }}</p>
+            </div>
         </div>
-    </div>
-{% endfor %}
-
+    {% endfor %}
+</div>
 <!— footer —>
 
 </body>

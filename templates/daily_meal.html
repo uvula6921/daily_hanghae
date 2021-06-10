@@ -32,6 +32,7 @@
             integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
             crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='common_js.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     {#    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"#}
     {#            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"#}
     {#            crossorigin="anonymous"></script>#}
@@ -45,10 +46,12 @@
     <link href="{{ url_for('static', filename='meal_style.css') }}" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+
     <title>오늘 뭐 먹었어?</title>
 
     <script>
         {#글 저장 함수#}
+
         function saveContent() {
 
             let title = $('#title').val();
@@ -158,8 +161,11 @@
 <div class="wrap">
     {#모달#}
     <!-- Button trigger modal -->
+    <p class="limit-p login-question">로그인 하신 회원만 쓰기/수정/삭제가 가능합니다.</p>
     <div class="modal-btn-a">
+
         <p class="limit-p">게시물은 최근 업데이트된 기준으로 18개만 보여집니다.</p>
+
         <button type="button" class="btn btn-primary btn_write" data-bs-toggle="modal" data-bs-target="#exampleModal">
             글쓰기
         </button>
@@ -220,6 +226,18 @@
                 </div>
             </div>
         {% endfor %}
+    </div>
+</div>
+
+<div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <section class="modal-card-body">
+            로그아웃이 완료되었습니다.
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button" onclick="window.location.replace('/');">Check</button>
+        </footer>
     </div>
 </div>
 

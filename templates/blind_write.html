@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="Daily Hangae"/>
+    <meta property="og:description" content="항해를 진행하며 하루하루를 기록해보자"/>
+    <meta property="og:image" content="{{ url_for('static', filename='ogimg.png') }}"/>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='common_css.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+And+White+Picture&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS,JS -->
+    {#
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" #}
+          {# integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+            crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='common_js.js') }}"></script>
+    {#
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" #}
+            {# integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" #}
+            {# crossorigin="anonymous"></script>
+    #}
+    {#
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" #}
+            {# integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" #}
+            {# crossorigin="anonymous"></script>
+    #}
+    {#
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" #}
+            {# integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" #}
+            {# crossorigin="anonymous"></script>
+    #}
+
+    <link href="{{ url_for('static', filename='meal_style.css') }}" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet">
+    <title>Blind Write</title>
+    <script>
+
+
+        function posting() {
+            let blind_title = $('#blind_title').val()
+            let blind_content = $('#blind_content').val()
+            let blind_today = new Date().toISOString()
+            $.ajax({
+                type: "POST",
+                url: "/blind_writing",
+                data: {blind_title_give: blind_title, blind_content_give: blind_content, blind_date_give: blind_today},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.href = "/blind_list"
+                }
+            })
+        }
+
+
+    </script>
+    <style>
+        .jumbotron {
+            width: 600px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<section class="hero is-small is-info">
+    <div class="hero-body">
+        <a href="/index">
+            <p class="title">
+                <i class="fa fa-compass" aria-hidden="true"></i>
+                Daily<br>
+                Hanghae
+            </p>
+        </a>
+    </div>
+    {% if bool_sign_in %}
+    <button class="button is-white is-medium is-rounded logout_btn box_slide_fwd"
+            onclick="$('.modal').addClass('is-active'); sign_out();">
+        <i class="fa fa-sign-out" aria-hidden="true"></i>Sign Out
+    </button>
+    {% endif %}
+</section>
+    <div class="jumbotron">
+        <div class="container">
+            <p></p>
+            <h3>Daily Hanghae Blind</h3>
+            <p></p>
+            <div class="posting-box">
+                <div class="form-group">
+                    <input id="blind_title" type="email" class="form-control" placeholder="Title">
+                </div>
+                <p></p>
+                <div class="form-group">
+                    <textarea id="blind_content" class="form-control" rows="3"
+                              placeholder="블라인드 내용"></textarea>
+                </div>
+                <p></p>
+                <button onclick="posting()" type="button" class="btn btn-primary">저장하기</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
