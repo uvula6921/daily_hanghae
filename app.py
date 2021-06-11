@@ -249,7 +249,7 @@ def write_diary():
         return redirect(url_for("diary_list"))
 
 # 다이어리 수정
-@app.route('/eidt_diary', methods=['POST'])
+@app.route('/edit_diary', methods=['POST'])
 def edit_diary():
     token_receive = request.cookies.get('mytoken')
     try:

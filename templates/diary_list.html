@@ -80,9 +80,12 @@
             position: relative;
             left: 40px;
         }
+
         .wrap {
-            width: 1350px;
-            margin: auto;
+            width: 1400px;
+            margin: 50px auto auto auto;
+            display: block;
+
         }
 
 
@@ -115,23 +118,21 @@
     <div class="tabs is-centered is-boxed is-medium">
         <ul>
             <li>
-                <a href="/daily_meal" style="position: relative; left: 12px;">
+                <a href="/daily_meal">
                     <span class="icon is-small"><i class="fa fa-cutlery" aria-hidden="true"></i></span>
                     <span>Daily meal</span>
                 </a>
             </li>
             <li class="is-active">
-                <a href="/diary_list" style="position: relative; left: 12px;">
+                <a href="/diary_list">
                     <span class="icon is-small"><i class="fa fa-book" aria-hidden="true"></i></span>
                     <span>Diary</span>
                 </a>
             </li>
             <li>
-                <a href="/diary_write" style="position: relative; left: 70px;">
+                <a href="/blind_list">
                     <span class="icon is-small"><i class="fa fa-user-secret" aria-hidden="true"></i></span>
                     <span>Blind</span>
-                    <button type="button" class="btn btn-primary" style="position: relative; left: 290px;"
-                            onclick="window.location.href='/diary_write'">다이어리 작성하기
                     </button>
                 </a>
             </li>
@@ -139,7 +140,10 @@
     </div>
 </section>
 
+
 <!-- content -->
+<button type="button" class="btn btn-primary" style="position: relative; left: 650px; display: block; margin-top: 50px;" onclick="window.location.href='/diary_write'">다이어리 작성하기
+                    </button>
 <div class="wrap">
     {% for diary in diary_list %}
         <div class="card">
@@ -153,7 +157,30 @@
         </div>
     {% endfor %}
 </div>
+</div>
 <!— footer —>
+<div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <section class="modal-card-body">
+            로그아웃이 완료되었습니다.
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button" onclick="window.location.replace('/');">Check</button>
+        </footer>
+    </div>
+</div>
 
-</body>
+
+
+
+
+        <script>
+            $('div').each(function () {
+                let length = 7;
+
+            }
+        </script>
+
+
 </html>

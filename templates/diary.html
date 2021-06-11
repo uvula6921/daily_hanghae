@@ -48,21 +48,21 @@
             let content = $("#formGroupExampleInput2").val();
 
 
-            let file = $("#file")[0].files[0];
             let form_data = new FormData();
-            console.log(title, content, file);
+            console.log(title, content);
 
-            form_data.append("file_give", file);
+
             form_data.append("title_give", title);
             form_data.append("content_give", content);
 
             $.ajax({
                 type: "POST",
-                url: '/write_diary',
-                data: form_data,
-                cache: false,
-                contentType: false,
-                processData: false,
+                url: '/edit_diary',
+                data: {
+                    id_give: "{{clicked_diary[0]["_id"]}}",
+                    title_give: title,
+                    content_give: content
+                },
                 success: function (response) {
                     alert(response["msg"])
                     window.location.href = '/diary_list';
@@ -144,6 +144,12 @@
             border-style: hidden;
         }
 
+    .wrap {
+            width: 1450px;
+            margin: auto;
+            display: block;
+
+    }
 
     </style>
 </head>
@@ -191,35 +197,30 @@
             </div>
         </section>
     <!-- content -->
+<div class="wrap">
     <div class="view-img" id="imagePreview">
-        <img id="upload-img" class="upload-img"/>
+        <img id="upload-img" class="upload-img" src="../static/diary_pics/{{ clicked_diary[0]["file"] }}"/>
     </div>
     <div class="content">
         </form>
-        <p>사진 업로드</p>
-        <div class="custom-file">
-            <input type="file" class="custom-file-input" id="file" accept="image/gif, image/jpeg, image/png">
-            <label class="custom-file-label" for="customFile" style="color: rgba(42,42,42,0.71);">업로드할 사진을
-                선택하세요.</label>
-        </div>
+        <h3>작성자 {{ clicked_diary[0]["user_name"] }}</h3>
+
         <div class="form-group">
             <label for="formGroupExampleInput">제목</label>
-            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="제목을 입력하세요.">
+            <input type="text" class="form-control" id="formGroupExampleInput" placeholder="제목을 입력하세요."value="{{ clicked_diary[0]["title"] }}">
         </div>
         <div class="form-group">
             <label for="formGroupExampleInput2">내용</label>
             <textarea class="form-control" id="formGroupExampleInput2" cols="50" rows="5"
-                      placeholder="내용을 입력하세요."></textarea>
+                      placeholder="내용을 입력하세요.">{{ clicked_diary[0]["content"]| replace("\n", "<br/>")|safe }}</textarea>
         </div>
         <div>
             <button type="button" class="btn btn-primary" onclick="editDiary()"> 게시글 수정</button>
             <button type="button" class="btn btn-secondary" onclick="deletediary()"> 삭제</button>
         </div>
     </div>
+</div>
 <!— footer —>
-<div class="jumbotron text-center mt-5 mb-0"><h3 class="text-secondary">Daily 항해</h3>
-    <p>This Homepage is powered by <span class="text-primary">Team 15</span> / Designed by <span
-            class="text-primary">Team 15</span></p>
 </div>
 </body>
 </html>
